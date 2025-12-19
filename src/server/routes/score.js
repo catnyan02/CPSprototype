@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getSession, updateSession } = require('../services/sessionService');
 const { computeAggregateScores } = require('../services/scoringEngine');
-const microworldsConfig = require('../../../config/microworlds.json');
+const microworldsConfig = require(path.join(process.cwd(), 'config', 'microworlds.json'));
 
 router.post('/', (req, res) => {
   const { sessionId } = req.body;

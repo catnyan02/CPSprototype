@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const microworldsConfig = require('../../../config/microworlds.json');
+const microworldsConfig = require(path.join(process.cwd(), 'config', 'microworlds.json'));
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
