@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const router = express.Router();
 const configPath = (() => {
   const distPath = path.join(__dirname, '..', '..', 'config', 'microworlds.json');
