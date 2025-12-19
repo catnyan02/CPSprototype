@@ -31,8 +31,10 @@ app.use('/health', healthRoutes);
 const clientDist = path.join(__dirname, '../client');
 if (require('fs').existsSync(clientDist)) {
   app.use(express.static(clientDist));
-  // Express 5 path-to-regexp needs a named wildcard for catch-all
-  app.get('/:path(*)', (req, res) => {
+  // Final GET handler to support client-side routing without relying on path patterns
+  app.use((req, res, next) => {
+    if (req.method !== 'GET') return next();
+    if (req.path.startsWith('/api') || req.path.startsWith('/admin') || req.path.startsWith('/health')) return next();
     res.sendFile(path.join(clientDist, 'index.html'));
   });
 }
