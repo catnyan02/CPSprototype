@@ -31,8 +31,8 @@ app.use('/health', healthRoutes);
 const clientDist = path.join(__dirname, '../client');
 if (require('fs').existsSync(clientDist)) {
   app.use(express.static(clientDist));
-  // Express 5 requires an explicit leading slash for catch-all routes
-  app.get('/*', (req, res) => {
+  // Express 5 path-to-regexp needs a named wildcard for catch-all
+  app.get('/:path(*)', (req, res) => {
     res.sendFile(path.join(clientDist, 'index.html'));
   });
 }
