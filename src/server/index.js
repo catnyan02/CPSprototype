@@ -27,8 +27,8 @@ app.use('/api/score', scoreRoutes);
 app.use('/admin', adminRoutes);
 app.use('/health', healthRoutes);
 
-// Serve static files from dist/client if it exists
-const clientDist = path.join(__dirname, '../../client');
+// Serve built client assets; works in dev (__dirname at src/server) and prod (__dirname at dist/server)
+const clientDist = path.join(__dirname, '../client');
 if (require('fs').existsSync(clientDist)) {
   app.use(express.static(clientDist));
   app.get('*', (req, res) => {
