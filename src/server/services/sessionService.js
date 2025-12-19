@@ -2,7 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { shuffle } = require('../utils/shuffle');
-const microworldsConfig = require(path.join(process.cwd(), 'config', 'microworlds.json'));
+
+const configPath = (() => {
+  const distPath = path.join(__dirname, '..', '..', 'config', 'microworlds.json');
+  if (require('fs').existsSync(distPath)) return distPath;
+  return path.join(process.cwd(), 'config', 'microworlds.json');
+})();
+const microworldsConfig = require(configPath);
 
 const SESSION_DIR = path.join(process.cwd(), 'data', 'sessions');
 const SESSION_DURATION_MS = 60 * 60 * 1000;

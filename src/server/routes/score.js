@@ -2,7 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { getSession, updateSession } = require('../services/sessionService');
 const { computeAggregateScores } = require('../services/scoringEngine');
-const microworldsConfig = require(path.join(process.cwd(), 'config', 'microworlds.json'));
+const configPath = (() => {
+  const distPath = path.join(__dirname, '..', '..', 'config', 'microworlds.json');
+  if (require('fs').existsSync(distPath)) return distPath;
+  return path.join(process.cwd(), 'config', 'microworlds.json');
+})();
+const microworldsConfig = require(configPath);
 
 router.post('/', (req, res) => {
   const { sessionId } = req.body;
