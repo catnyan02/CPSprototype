@@ -1,0 +1,11 @@
+{
+  "controlStepLimit": 6,
+  "votatMinTrials": 3,
+  "maxArrows": 9,
+  "bands": {
+    "KA": { "Emerging": [0, 3], "Developing": [4, 6], "Proficient": [7, 9], "Advanced": [10, 27] },
+    "KApp": { "Emerging": [0, 3], "Developing": [4, 6], "Proficient": [7, 9], "Advanced": [10, 12] },
+    "SU": { "Emerging": [0, 1], "Developing": [2, 3], "Proficient": [4, 5], "Advanced": [6, 6] }
+  }
+}
+

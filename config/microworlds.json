@@ -1,0 +1,115 @@
+{
+  "semesterManager": {
+    "id": "semesterManager",
+    "name": "Semester Manager System",
+    "inputs": [
+      { "id": "studyHours", "label": "Study Hours", "min": 0, "max": 100, "initial": 50 },
+      { "id": "groupWork", "label": "Group Work Effort", "min": 0, "max": 100, "initial": 50 },
+      { "id": "selfCare", "label": "Self-Care/Rest", "min": 0, "max": 100, "initial": 50 }
+    ],
+    "outputs": [
+      { "id": "coursePerf", "label": "Course Performance", "initial": 50 },
+      { "id": "stress", "label": "Stress Level", "initial": 50 },
+      { "id": "projectProg", "label": "Project Progress", "initial": 50 }
+    ],
+    "effectMatrixB": [
+      [2, 1, -1],
+      [1, -1, 2],
+      [0, 2, 1]
+    ],
+    "targets": { "coursePerf": 80, "stress": 40, "projectProg": 60 },
+    "targetComparison": { "coursePerf": ">=", "stress": "<=", "projectProg": ">=" },
+    "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
+    "mcq": {
+      "item5": {
+        "question": "Best input adjustment for increasing Course Performance while minimizing Stress?",
+        "options": [
+          "A. Increase Study Hours a lot",
+          "B. Increase Study Hours slightly and increase Rest",
+          "C. Increase Group Work only",
+          "D. Decrease Rest and increase Study Hours significantly"
+        ],
+        "correct": "B"
+      },
+      "item6": {
+        "question": "Best final slider adjustment for +6 Project Progress without overshooting Stress?",
+        "options": [
+          "A. Increase Study Hours by 2 points and Group Work by 2 points; leave Rest unchanged.",
+          "B. Keep Study Hours and Group Work unchanged; increase Rest by 3 points.",
+          "C. Increase Group Work by 3 points and Rest by 3 points; leave Study Hours unchanged.",
+          "D. Increase Study Hours by 3 points and Rest by 2 points; leave Group Work unchanged."
+        ],
+        "correct": "C"
+      }
+    }
+  },
+  "placeholder1": {
+    "id": "placeholder1",
+    "name": "Ecosystem Manager",
+    "inputs": [
+      { "id": "water", "label": "Water Supply", "min": 0, "max": 100, "initial": 50 },
+      { "id": "fertilizer", "label": "Fertilizer", "min": 0, "max": 100, "initial": 50 },
+      { "id": "pesticide", "label": "Pesticide", "min": 0, "max": 100, "initial": 50 }
+    ],
+    "outputs": [
+      { "id": "cropYield", "label": "Crop Yield", "initial": 50 },
+      { "id": "soilHealth", "label": "Soil Health", "initial": 50 },
+      { "id": "pollution", "label": "Pollution", "initial": 50 }
+    ],
+    "effectMatrixB": [
+      [2, 1, -1],
+      [1, -1, 1],
+      [0, 1, 2]
+    ],
+    "targets": { "cropYield": 80, "soilHealth": 60, "pollution": 30 },
+    "targetComparison": { "cropYield": ">=", "soilHealth": ">=", "pollution": "<=" },
+    "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
+    "mcq": {
+      "item5": {
+        "question": "Placeholder Question 1",
+        "options": ["A", "B", "C", "D"],
+        "correct": "B"
+      },
+      "item6": {
+        "question": "Placeholder Question 2",
+        "options": ["A", "B", "C", "D"],
+        "correct": "C"
+      }
+    }
+  },
+  "placeholder2": {
+    "id": "placeholder2",
+    "name": "Factory Control",
+    "inputs": [
+      { "id": "speed", "label": "Line Speed", "min": 0, "max": 100, "initial": 50 },
+      { "id": "temp", "label": "Temperature", "min": 0, "max": 100, "initial": 50 },
+      { "id": "maintenance", "label": "Maintenance", "min": 0, "max": 100, "initial": 50 }
+    ],
+    "outputs": [
+      { "id": "production", "label": "Production Rate", "initial": 50 },
+      { "id": "quality", "label": "Quality Score", "initial": 50 },
+      { "id": "energy", "label": "Energy Usage", "initial": 50 }
+    ],
+    "effectMatrixB": [
+      [2, 1, -1],
+      [-1, -1, 2],
+      [2, 2, 0]
+    ],
+    "targets": { "production": 90, "quality": 80, "energy": 60 },
+    "targetComparison": { "production": ">=", "quality": ">=", "energy": "<=" },
+    "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
+    "mcq": {
+      "item5": {
+        "question": "Placeholder Question 1",
+        "options": ["A", "B", "C", "D"],
+        "correct": "B"
+      },
+      "item6": {
+        "question": "Placeholder Question 2",
+        "options": ["A", "B", "C", "D"],
+        "correct": "C"
+      }
+    }
+  }
+}
+
