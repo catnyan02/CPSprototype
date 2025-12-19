@@ -1,5 +1,12 @@
+const path = require('path');
 const { getLogs } = require('./eventLogger');
-const scoringConfig = require('../../../config/scoring.json');
+
+const scoringConfigPath = (() => {
+  const distPath = path.join(__dirname, '..', '..', 'config', 'scoring.json');
+  if (require('fs').existsSync(distPath)) return distPath;
+  return path.join(process.cwd(), 'config', 'scoring.json');
+})();
+const scoringConfig = require(scoringConfigPath);
 
 /**
  * Computes scores for a single microworld session
@@ -224,4 +231,3 @@ function computeAggregateScores(session, microworldsConfig) {
 }
 
 module.exports = { scoreMicroworld, computeAggregateScores };
-
