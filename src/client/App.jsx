@@ -22,6 +22,12 @@ const PHASE = {
 const SESSION_DURATION_MS = 60 * 60 * 1000;
 const SESSION_STORAGE_KEY = 'cps-session';
 
+const SCENARIO_TEXT = {
+  semesterManager: 'Scenario: You are managing your academic semester. Your goal is to balance performance, progress, and stress.',
+  presentationPrep: 'Scenario: You are preparing an important academic presentation.',
+  tutoringSideGig: 'Scenario: You are tutoring students while preparing for your own exams.'
+};
+
 const App = () => {
   const [session, setSession] = useState(null);
   const [sessionEndsAt, setSessionEndsAt] = useState(null);
@@ -43,6 +49,9 @@ const App = () => {
   const [outputs, setOutputs] = useState([]); // Array of values
   const [controlSteps, setControlSteps] = useState(0);
   const [scores, setScores] = useState(null);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [practiceInputs, setPracticeInputs] = useState([0, 0, 0]);
+  const [practiceOutputs, setPracticeOutputs] = useState([0, 0]);
 
   const { log, flush } = useEventBuffer(session?.sessionId);
 
@@ -61,6 +70,30 @@ const App = () => {
       nextOut[i] = clamp(nextOut[i] + change);
     }
     return nextOut;
+  };
+
+  // Practice mini-sim
+  const PRACTICE_BASE = 0;
+  const PRACTICE_MIN = 0;
+  const PRACTICE_MAX = 100;
+  const PRACTICE_SCALE = 10; // scale 0-5 inputs into 0-100 outputs
+  const PRACTICE_WEIGHTS = [
+    [1, -1, 1],
+    [1, 1, -1]
+  ];
+
+  const resetPractice = () => {
+    setPracticeInputs([PRACTICE_BASE, PRACTICE_BASE, PRACTICE_BASE]);
+    setPracticeOutputs([PRACTICE_BASE, PRACTICE_BASE]);
+  };
+
+  const applyPractice = () => {
+    const next = PRACTICE_WEIGHTS.map((weights) => {
+      const weighted = weights.reduce((acc, w, idx) => acc + w * practiceInputs[idx], 0);
+      const scaled = weighted * PRACTICE_SCALE; // map to 0-100 range
+      return clamp(Math.round(scaled), PRACTICE_MIN, PRACTICE_MAX);
+    });
+    setPracticeOutputs(next);
   };
 
   const startSession = async () => {
@@ -92,6 +125,7 @@ const App = () => {
     setOutputs(mw.outputs.map(o => o.initial));
     setControlSteps(0);
     setPhase(nextPhase);
+    setShowInstructions(nextPhase === PHASE.EXPLORE || nextPhase === PHASE.DIAGRAM || nextPhase === PHASE.CONTROL);
 
     if (!options.skipLog) {
       log('START_ITEM', { microworldId: mw.id }, mw.id, nextPhase);
@@ -167,6 +201,15 @@ const App = () => {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [session, phase, sessionExpired]);
+
+  useEffect(() => {
+    // Show the instruction modal whenever we enter explore, diagram, or control phases
+    if (phase === PHASE.EXPLORE || phase === PHASE.DIAGRAM || phase === PHASE.CONTROL) {
+      setShowInstructions(true);
+    } else {
+      setShowInstructions(false);
+    }
+  }, [phase]);
 
   const handleSliderChange = (index, value) => {
     if (sessionExpired || isEndingSession) return;
@@ -382,15 +425,236 @@ const App = () => {
     });
   };
 
+  const getPhaseInstructionContent = () => {
+    if (!currentMicroworld) return null;
+    const scenario = SCENARIO_TEXT[currentMicroworld.id];
+    const lines = [];
+    if (scenario) {
+      lines.push(scenario);
+    }
+
+    if (phase === PHASE.EXPLORE) {
+      return {
+        subtitle: '| Phase 1: Exploration',
+        lines: [
+          ...lines,
+          'Adjust the sliders to see how outputs respond, then click Apply to view the changes.',
+          'Try different combinations - there are no penalties for exploration.',
+          'Use Reset to return inputs and outputs to their starting values.'
+        ]
+      };
+    }
+
+    if (phase === PHASE.DIAGRAM) {
+      return {
+        subtitle: '| Phase 2: Understanding the system',
+        lines: [
+          ...lines,
+          'Task 1: Draw arrows from each input to the outputs it affects.',
+          'Task 2: Mark each effect as positive (+) or negative (-).',
+          'Task 3: Rate the strength: 1 = Weak, 2 = Moderate, 3 = Strong.'
+        ]
+      };
+    }
+
+    if (phase === PHASE.CONTROL) {
+      const targetLines = currentMicroworld.targets
+        ? Object.entries(currentMicroworld.targets).map(([outId, targetVal]) => {
+            const outputLabel = currentMicroworld.outputs.find((o) => o.id === outId)?.label || outId;
+            const op = currentMicroworld.targetComparison?.[outId] || '>=';
+            return `${outputLabel} ${op} ${targetVal}`;
+          })
+        : [];
+
+      return {
+        subtitle: '| Phase 3: Managing the system',
+        lines: [
+          ...lines,
+          'Adjust inputs to reach the target goals shown below.',
+          ...targetLines,
+          'You have up to 6 Apply steps in this phase; changes only count when you click Apply.'
+        ]
+      };
+    }
+
+    return null;
+  };
+
+  const renderInstructionPanels = () => {
+    if (!currentMicroworld || phase === PHASE.START || phase === PHASE.FEEDBACK) return null;
+
+    // Hide inline instructions; instructions now live in modal for explore, diagram, control, and MCQ
+    if (phase === PHASE.EXPLORE || phase === PHASE.DIAGRAM || phase === PHASE.CONTROL || phase === PHASE.MCQ) return null;
+
+    const blocks = [];
+    const scenario = SCENARIO_TEXT[currentMicroworld.id];
+    if (scenario) {
+      blocks.push({
+        title: 'Scenario',
+        items: [scenario]
+      });
+    }
+
+    if (phase === PHASE.EXPLORE) {
+      blocks.push({
+        title: 'Phase 1: Exploration',
+        items: [
+          'Adjust the sliders to see how outputs respond, then click Apply to view the changes.',
+          'Try different combinations—there are no penalties for exploration.',
+          'Use Reset to return inputs and outputs to their starting values.'
+        ]
+      });
+    } else if (phase === PHASE.CONTROL) {
+      const targetLines = currentMicroworld.targets
+        ? Object.entries(currentMicroworld.targets).map(([outId, targetVal]) => {
+            const outputLabel = currentMicroworld.outputs.find((o) => o.id === outId)?.label || outId;
+            const op = currentMicroworld.targetComparison?.[outId] || '>=';
+            return `${outputLabel} ${op} ${targetVal}`;
+          })
+        : [];
+
+      blocks.push({
+        title: 'Phase 3: Managing the system',
+        items: [
+          'Adjust inputs to reach the target goals shown below.',
+          ...targetLines,
+          'You have up to 6 Apply steps in this phase; changes only count when you click Apply.'
+        ]
+      });
+    } else if (phase === PHASE.MCQ) {
+      blocks.push({
+        title: 'Phase 4: Multiple choice',
+        items: [
+          'Answer two questions based on the causal model you discovered.',
+          'Each option represents a single combined slider adjustment; changes happen simultaneously.',
+          'Choose the option that best meets the stated goal without causing unwanted changes.'
+        ]
+      });
+    } else if (phase === PHASE.SCORING) {
+      blocks.push({
+        title: 'Scoring',
+        items: ['Please wait while your responses are saved and scored.']
+      });
+    }
+
+    if (blocks.length === 0) return null;
+
+    return (
+      <div className="instruction-panels">
+        {blocks.map((block, idx) => (
+          <div className="instruction-card" key={`${block.title}-${idx}`}>
+            <h3>{block.title}</h3>
+            <ul>
+              {block.items.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   if (!session) {
     return (
       <div className="start-screen">
-        <h1>MicroDYN Problem Solving Assessment</h1>
-        <p>
-          You will explore three dynamic systems (Semester Manager, Presentation Prep, Tutoring Side-Gig).
-          Explore them, draw their structure, and control them.
-        </p>
-        <button onClick={startSession}>Start Assessment</button>
+        <div className="start-wrapper">
+          <div className="start-card start-grid">
+            <div className="start-hero">
+              <div className="start-header">
+                <h1 className="start-title">Complex Problem-Solving Assessment</h1>
+                <p className="start-subtitle">Estimated time: about 60 minutes. You will work at your own pace.</p>
+              </div>
+
+              <div className="start-hero-note">
+                <p>In this assessment, you will work with three independent interactive tasks.</p>
+                <p>Each task represents a small dynamic system related to academic life.</p>
+                <p>There are no penalties for exploration.</p>
+                <p>You are encouraged to try different input combinations to understand how the system works.</p>
+                <p>Please read all instructions carefully and work at your own pace.</p>
+              </div>
+
+              <div className="start-timeline">
+                <div className="start-step">
+                  <span className="start-step-number">1</span>
+                  <p>Explore how the system works by adjusting the input variables.</p>
+                </div>
+                <div className="start-step">
+                  <span className="start-step-number">2</span>
+                  <p>Answer questions based on what you discovered.</p>
+                </div>
+                <div className="start-step">
+                  <span className="start-step-number">3</span>
+                  <p>Use your understanding to reach specific goals.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="practice-module elevated">
+              <div className="practice-header">
+                <h3>Practice Area</h3>
+              </div>
+
+              <div className="practice-note">
+                <p className="practice-note-title">Before the main tasks, practise on this short example to familiarize yourself with:</p>
+                <ul>
+                  <li>Adjusting the sliders</li>
+                  <li>Observing output changes</li>
+                  <li>Confirming your actions</li>
+                </ul>
+                <p className="practice-note-foot">This example is not scored.</p>
+              </div>
+
+              <div className="practice-layout">
+                <div className="practice-sliders">
+                  {['Input A', 'Input B', 'Input C'].map((label, idx) => (
+                    <div className="practice-slider-group" key={label}>
+                      <label className="practice-label">{label}</label>
+                      <input
+                        type="range"
+                        min="0"
+                        max="5"
+                        step="1"
+                        value={practiceInputs[idx]}
+                        className="slider-vertical practice-slider"
+                        onChange={(e) => {
+                          const next = [...practiceInputs];
+                          next[idx] = Number(e.target.value);
+                          setPracticeInputs(next);
+                        }}
+                      />
+                      <span className="practice-value">{practiceInputs[idx]}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="practice-outputs">
+                  {['Output X', 'Output Y'].map((label, idx) => (
+                      <div className="practice-output" key={label}>
+                        <span className="practice-label">{label}</span>
+                        <div className="bar-container practice-bar">
+                          <div
+                            className="bar-fill"
+                            style={{ height: `${(practiceOutputs[idx] / PRACTICE_MAX) * 100}%` }}
+                          />
+                        </div>
+                        <span className="practice-value">{practiceOutputs[idx]}</span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+
+              <div className="practice-actions">
+                <button className="apply-btn" onClick={applyPractice}>Apply</button>
+                <button className="reset-btn" onClick={resetPractice}>Reset</button>
+              </div>
+            </div>
+
+            <div className="start-primary-action">
+              <button className="start-btn" onClick={startSession}>Begin Assessment</button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -408,17 +672,31 @@ const App = () => {
             outputs={currentMicroworld.outputs} 
             onSave={handleDiagramSave}
             requestConfirm={requestConfirm}
+            showHelpButton={phase === PHASE.DIAGRAM}
+            onHelpClick={() => setShowInstructions(true)}
           />
         </div>
       );
     } else if (phase === PHASE.MCQ) {
+      const question = !mcqAnswer5 ? currentMicroworld.mcq.item5.question : currentMicroworld.mcq.item6.question;
+      const options = !mcqAnswer5 ? currentMicroworld.mcq.item5.options : currentMicroworld.mcq.item6.options;
+      const mcqTitle = !mcqAnswer5 ? 'Question 1 of 2' : 'Question 2 of 2';
+
       return (
-        <MCQModal 
-          question={!mcqAnswer5 ? currentMicroworld.mcq.item5.question : currentMicroworld.mcq.item6.question}
-          options={!mcqAnswer5 ? currentMicroworld.mcq.item5.options : currentMicroworld.mcq.item6.options}
-          onAnswer={handleMCQSubmit}
-          disabled={isInteractionLocked}
-        />
+        <div className="mcq-single">
+          <div className="mcq-question-card mcq-single-card">
+            <div className="mcq-question-header">
+              <span className="badge">{mcqTitle}</span>
+            </div>
+            <MCQModal 
+              question={question}
+              options={options}
+              onAnswer={handleMCQSubmit}
+              disabled={isInteractionLocked}
+              inline
+            />
+          </div>
+        </div>
       );
     } else if (phase === PHASE.SCORING) {
       return <div className="loading-state">Scoring assessment...</div>;
@@ -428,19 +706,11 @@ const App = () => {
 
     return (
       <div className="microworld-interface">
-        {phase === PHASE.CONTROL && (
-          <div className="control-status">
-            Steps: {controlSteps} / 6
-            {timerEndTime && (
-              <div className="inline-timer">
-                <SessionTimer 
-                  endTime={timerEndTime} 
-                  label="Session" 
-                  compact 
-                  clockOffsetMs={serverClockOffset}
-                />
-              </div>
-            )}
+        {(phase === PHASE.CONTROL) && (
+          <div className="phase-top-row">
+            <div className="control-status">
+              Steps: {controlSteps} / 6
+            </div>
           </div>
         )}
         
@@ -453,6 +723,15 @@ const App = () => {
           />
           
           <div className="center-controls">
+            {(phase === PHASE.EXPLORE || phase === PHASE.CONTROL) && (
+              <button
+                className="help-btn"
+                title="View instructions"
+                onClick={() => setShowInstructions(true)}
+              >
+                ?
+              </button>
+            )}
             <button 
               className="apply-btn" 
               onClick={onApply}
@@ -532,6 +811,8 @@ const App = () => {
         )}
       </header>
 
+      {renderInstructionPanels()}
+
       <div className={`content-shell ${showBlocker ? 'blocked' : ''}`}>
         {showBlocker && (
           <div className="session-blocker" role="alert">
@@ -540,6 +821,29 @@ const App = () => {
         )}
         {renderContent()}
       </div>
+
+      {showInstructions && currentMicroworld && [PHASE.EXPLORE, PHASE.DIAGRAM, PHASE.CONTROL].includes(phase) && (() => {
+        const content = getPhaseInstructionContent();
+        const scenarioLine = content?.lines?.[0];
+        const taskLines = content?.lines?.slice(1) || [];
+
+        return (
+          <div className="modal-overlay instruction-overlay">
+            <div className="instruction-modal">
+              <div className="instruction-modal-header">
+                <h3 className="modal-title">{currentMicroworld.name}</h3>
+                <span className="modal-subtitle">{content?.subtitle}</span>
+              </div>
+              {scenarioLine && <p className="modal-text">{scenarioLine}</p>}
+              {taskLines.length > 0 && <hr />}
+              {taskLines.map((line, idx) => (
+                <p className="modal-text" key={idx}>{line}</p>
+              ))}
+              <button className="apply-btn" onClick={() => setShowInstructions(false)}>Continue</button>
+            </div>
+          </div>
+        );
+      })()}
 
       <ConfirmDialog
         open={confirmState.open}
@@ -555,6 +859,3 @@ const App = () => {
 };
 
 export default App;
-
-
-
