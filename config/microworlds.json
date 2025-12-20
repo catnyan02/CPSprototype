@@ -1,112 +1,132 @@
 {
   "semesterManager": {
     "id": "semesterManager",
-    "name": "Semester Manager System",
+    "name": "Semester Manager",
     "inputs": [
-      { "id": "studyHours", "label": "Study Hours", "min": 0, "max": 100, "initial": 50 },
-      { "id": "groupWork", "label": "Group Work Effort", "min": 0, "max": 100, "initial": 50 },
-      { "id": "selfCare", "label": "Self-Care/Rest", "min": 0, "max": 100, "initial": 50 }
+      { "id": "studyHours", "label": "Study Hours", "min": 0, "max": 5, "initial": 0 },
+      { "id": "groupWork", "label": "Group Work", "min": 0, "max": 5, "initial": 0 },
+      { "id": "rest", "label": "Rest", "min": 0, "max": 5, "initial": 0 }
     ],
     "outputs": [
-      { "id": "coursePerf", "label": "Course Performance", "initial": 50 },
-      { "id": "stress", "label": "Stress Level", "initial": 50 },
-      { "id": "projectProg", "label": "Project Progress", "initial": 50 }
+      { "id": "coursePerformance", "label": "Course Performance", "initial": 10 },
+      { "id": "projectProgress", "label": "Project Progress", "initial": 15 },
+      { "id": "stress", "label": "Stress", "initial": 20 }
     ],
     "effectMatrixB": [
-      [2, 1, -1],
-      [1, -1, 2],
-      [0, 2, 1]
+      [3, 0, 0],
+      [0, 2, 0],
+      [2, 2, -3]
     ],
-    "targets": { "coursePerf": 80, "stress": 40, "projectProg": 60 },
-    "targetComparison": { "coursePerf": ">=", "stress": "<=", "projectProg": ">=" },
+    "targets": { "coursePerformance": 80, "projectProgress": 65, "stress": 55 },
+    "targetComparison": { "coursePerformance": ">=", "projectProgress": ">=", "stress": "<=" },
     "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
     "mcq": {
       "item5": {
-        "question": "Best input adjustment for increasing Course Performance while minimizing Stress?",
+        "question": "Which single slider most effectively lowers Stress quickly?",
         "options": [
-          "A. Increase Study Hours a lot",
-          "B. Increase Study Hours slightly and increase Rest",
-          "C. Increase Group Work only",
-          "D. Decrease Rest and increase Study Hours significantly"
+          "A. Increase Study Hours",
+          "B. Increase Group Work",
+          "C. Increase Rest",
+          "D. Decrease Rest"
+        ],
+        "correct": "C"
+      },
+      "item6": {
+        "question": "Which input directly drives up Project Progress when you need more progress?",
+        "options": [
+          "A. Study Hours",
+          "B. Group Work",
+          "C. Rest",
+          "D. None of them affect Project Progress"
+        ],
+        "correct": "B"
+      }
+    }
+  },
+  "presentationPrep": {
+    "id": "presentationPrep",
+    "name": "Presentation Prep",
+    "inputs": [
+      { "id": "rehearsalTime", "label": "Rehearsal Time", "min": 0, "max": 5, "initial": 0 },
+      { "id": "slidePolish", "label": "Slide Polish Effort", "min": 0, "max": 5, "initial": 0 },
+      { "id": "sleepBreaks", "label": "Sleep / Breaks", "min": 0, "max": 5, "initial": 0 }
+    ],
+    "outputs": [
+      { "id": "presentationQuality", "label": "Presentation Quality", "initial": 0 },
+      { "id": "confidence", "label": "Confidence", "initial": 20 },
+      { "id": "stress", "label": "Stress", "initial": 50 }
+    ],
+    "effectMatrixB": [
+      [0, 3, 0],
+      [3, 0, -1],
+      [2, 1, -3]
+    ],
+    "targets": { "presentationQuality": 75, "confidence": 75, "stress": 55 },
+    "targetComparison": { "presentationQuality": ">=", "confidence": ">=", "stress": "<=" },
+    "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
+    "mcq": {
+      "item5": {
+        "question": "Which slider directly boosts Presentation Quality the most?",
+        "options": [
+          "A. Rehearsal Time",
+          "B. Slide Polish Effort",
+          "C. Sleep / Breaks",
+          "D. None of them"
         ],
         "correct": "B"
       },
       "item6": {
-        "question": "Best final slider adjustment for +6 Project Progress without overshooting Stress?",
+        "question": "Stress is too high. What adjustment best brings Stress down with minimal hit to Confidence?",
         "options": [
-          "A. Increase Study Hours by 2 points and Group Work by 2 points; leave Rest unchanged.",
-          "B. Keep Study Hours and Group Work unchanged; increase Rest by 3 points.",
-          "C. Increase Group Work by 3 points and Rest by 3 points; leave Study Hours unchanged.",
-          "D. Increase Study Hours by 3 points and Rest by 2 points; leave Group Work unchanged."
+          "A. Increase Rehearsal Time",
+          "B. Increase Slide Polish Effort",
+          "C. Increase Sleep / Breaks",
+          "D. Decrease Sleep / Breaks"
         ],
         "correct": "C"
       }
     }
   },
-  "placeholder1": {
-    "id": "placeholder1",
-    "name": "Ecosystem Manager",
+  "tutoringSideGig": {
+    "id": "tutoringSideGig",
+    "name": "Tutoring Side-Gig",
     "inputs": [
-      { "id": "water", "label": "Water Supply", "min": 0, "max": 100, "initial": 50 },
-      { "id": "fertilizer", "label": "Fertilizer", "min": 0, "max": 100, "initial": 50 },
-      { "id": "pesticide", "label": "Pesticide", "min": 0, "max": 100, "initial": 50 }
+      { "id": "tutoringSessions", "label": "Tutoring Sessions", "min": 0, "max": 5, "initial": 0 },
+      { "id": "prepTime", "label": "Session Prep Time", "min": 0, "max": 5, "initial": 0 },
+      { "id": "personalStudy", "label": "Personal Study Time", "min": 0, "max": 5, "initial": 0 }
     ],
     "outputs": [
-      { "id": "cropYield", "label": "Crop Yield", "initial": 50 },
-      { "id": "soilHealth", "label": "Soil Health", "initial": 50 },
-      { "id": "pollution", "label": "Pollution", "initial": 50 }
+      { "id": "earnings", "label": "Earnings", "initial": 0 },
+      { "id": "teachingProficiency", "label": "Teaching Proficiency", "initial": 30 },
+      { "id": "examReadiness", "label": "Exam Readiness", "initial": 0 }
     ],
     "effectMatrixB": [
-      [2, 1, -1],
-      [1, -1, 1],
-      [0, 1, 2]
+      [3, 2, 0],
+      [2, 0, 0],
+      [-2, 1, 3]
     ],
-    "targets": { "cropYield": 80, "soilHealth": 60, "pollution": 30 },
-    "targetComparison": { "cropYield": ">=", "soilHealth": ">=", "pollution": "<=" },
+    "targets": { "earnings": 85, "teachingProficiency": 60, "examReadiness": 80 },
+    "targetComparison": { "earnings": ">=", "teachingProficiency": ">=", "examReadiness": ">=" },
     "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
     "mcq": {
       "item5": {
-        "question": "Placeholder Question 1",
-        "options": ["A", "B", "C", "D"],
-        "correct": "B"
+        "question": "Which input grows Earnings fastest per point of adjustment?",
+        "options": [
+          "A. Increase Tutoring Sessions",
+          "B. Increase Session Prep Time",
+          "C. Increase Personal Study Time",
+          "D. Decrease Tutoring Sessions"
+        ],
+        "correct": "A"
       },
       "item6": {
-        "question": "Placeholder Question 2",
-        "options": ["A", "B", "C", "D"],
-        "correct": "C"
-      }
-    }
-  },
-  "placeholder2": {
-    "id": "placeholder2",
-    "name": "Factory Control",
-    "inputs": [
-      { "id": "speed", "label": "Line Speed", "min": 0, "max": 100, "initial": 50 },
-      { "id": "temp", "label": "Temperature", "min": 0, "max": 100, "initial": 50 },
-      { "id": "maintenance", "label": "Maintenance", "min": 0, "max": 100, "initial": 50 }
-    ],
-    "outputs": [
-      { "id": "production", "label": "Production Rate", "initial": 50 },
-      { "id": "quality", "label": "Quality Score", "initial": 50 },
-      { "id": "energy", "label": "Energy Usage", "initial": 50 }
-    ],
-    "effectMatrixB": [
-      [2, 1, -1],
-      [-1, -1, 2],
-      [2, 2, 0]
-    ],
-    "targets": { "production": 90, "quality": 80, "energy": 60 },
-    "targetComparison": { "production": ">=", "quality": ">=", "energy": "<=" },
-    "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
-    "mcq": {
-      "item5": {
-        "question": "Placeholder Question 1",
-        "options": ["A", "B", "C", "D"],
-        "correct": "B"
-      },
-      "item6": {
-        "question": "Placeholder Question 2",
-        "options": ["A", "B", "C", "D"],
+        "question": "Exam Readiness is falling behind while Earnings look fine. What should you raise first?",
+        "options": [
+          "A. Increase Tutoring Sessions further",
+          "B. Increase Session Prep Time",
+          "C. Increase Personal Study Time",
+          "D. Reduce Session Prep Time"
+        ],
         "correct": "C"
       }
     }

@@ -49,22 +49,14 @@ const App = () => {
   // Helper: Clamp
   const clamp = (val, min = 0, max = 100) => Math.max(min, Math.min(max, val));
 
-  // Compute outputs locally for responsiveness
-  const computeOutputs = (currentIn, prevIn, currentOut, effectMatrix) => {
-    // Delta inputs
-    // The spec says: outputs = clamp(outputs + B * deltaInputs)
-    // If this is the FIRST step, prevIn might be same as currentIn (no delta)?
-    // Or initial outputs are fixed.
-    
-    if (!prevIn) return currentOut;
-
-    const delta = currentIn.map((v, i) => v - prevIn[i]);
+  // Compute outputs locally for responsiveness: outputs = clamp(outputs + B * inputs)
+  const computeOutputs = (currentIn, currentOut, effectMatrix) => {
     const nextOut = [...currentOut];
 
     for (let i = 0; i < nextOut.length; i++) {
       let change = 0;
-      for (let j = 0; j < delta.length; j++) {
-        change += effectMatrix[i][j] * delta[j];
+      for (let j = 0; j < currentIn.length; j++) {
+        change += effectMatrix[i][j] * currentIn[j];
       }
       nextOut[i] = clamp(nextOut[i] + change);
     }
@@ -200,27 +192,15 @@ const App = () => {
     const initInputs = currentMicroworld.inputs.map((i) => i.initial);
     const initOutputs = currentMicroworld.outputs.map((o) => o.initial);
     setInputs(initInputs);
-    setAppliedInputs(initInputs);
     setOutputs(initOutputs);
   };
-
-  // Actually, to support both "Live" perception and "Discrete" logic:
-  // We'll track `appliedInputs`.
-  const [appliedInputs, setAppliedInputs] = useState([]);
-
-  useEffect(() => {
-    if (currentMicroworld) {
-      setAppliedInputs(currentMicroworld.inputs.map(i => i.initial));
-    }
-  }, [currentMicroworld]);
 
   const onApply = () => {
     if (sessionExpired || isEndingSession) return;
     if (phase === PHASE.CONTROL && controlSteps >= 6) return;
 
-    const newOutputs = computeOutputs(inputs, appliedInputs, outputs, currentMicroworld.effectMatrixB);
+    const newOutputs = computeOutputs(inputs, outputs, currentMicroworld.effectMatrixB);
     setOutputs(newOutputs);
-    setAppliedInputs(inputs);
     
     if (phase === PHASE.CONTROL) {
       setControlSteps(s => s + 1);
@@ -239,7 +219,6 @@ const App = () => {
       // Spec: "Phase 2... target values shown; user adjusts inputs..."
       // Should we reset inputs/outputs to initial? Usually yes.
       setInputs(currentMicroworld.inputs.map(i => i.initial));
-      setAppliedInputs(currentMicroworld.inputs.map(i => i.initial));
       setOutputs(currentMicroworld.outputs.map(o => o.initial));
       setControlSteps(0);
       setPhase(PHASE.CONTROL);
@@ -407,7 +386,10 @@ const App = () => {
     return (
       <div className="start-screen">
         <h1>MicroDYN Problem Solving Assessment</h1>
-        <p>You will encounter 3 dynamic systems. Explore them, draw their structure, and control them.</p>
+        <p>
+          You will explore three dynamic systems (Semester Manager, Presentation Prep, Tutoring Side-Gig).
+          Explore them, draw their structure, and control them.
+        </p>
         <button onClick={startSession}>Start Assessment</button>
       </div>
     );
