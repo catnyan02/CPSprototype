@@ -681,25 +681,14 @@ const App = () => {
         </div>
       );
     } else if (phase === PHASE.MCQ) {
-      const question = !mcqAnswer5 ? currentMicroworld.mcq.item5.question : currentMicroworld.mcq.item6.question;
-      const options = !mcqAnswer5 ? currentMicroworld.mcq.item5.options : currentMicroworld.mcq.item6.options;
-      const mcqTitle = !mcqAnswer5 ? 'Question 1 of 2' : 'Question 2 of 2';
-
       return (
-        <div className="mcq-single">
-          <div className="mcq-question-card mcq-single-card">
-            <div className="mcq-question-header">
-              <span className="badge">{mcqTitle}</span>
-            </div>
-            <MCQModal 
-              question={question}
-              options={options}
-              onAnswer={handleMCQSubmit}
-              disabled={isInteractionLocked}
-              inline
-            />
-          </div>
-        </div>
+        <MCQModal 
+          question={!mcqAnswer5 ? currentMicroworld.mcq.item5.question : currentMicroworld.mcq.item6.question}
+          options={!mcqAnswer5 ? currentMicroworld.mcq.item5.options : currentMicroworld.mcq.item6.options}
+          onAnswer={handleMCQSubmit}
+          disabled={isInteractionLocked}
+          inline
+        />
       );
     } else if (phase === PHASE.SCORING) {
       return <div className="loading-state">Scoring assessment...</div>;
