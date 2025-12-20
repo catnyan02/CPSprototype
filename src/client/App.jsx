@@ -5,7 +5,6 @@ import SessionTimer from './components/Timer';
 import DiagramBuilder from './components/DiagramBuilder';
 import MCQModal from './components/MCQModal';
 import ProgressBar from './components/ProgressBar';
-import SummaryProfile from './components/SummaryProfile';
 import ConfirmDialog from './components/ConfirmDialog';
 import { useEventBuffer } from './hooks/useEventBuffer';
 
@@ -701,7 +700,12 @@ const App = () => {
     } else if (phase === PHASE.SCORING) {
       return <div className="loading-state">Scoring assessment...</div>;
     } else if (phase === PHASE.FEEDBACK) {
-      return <SummaryProfile scores={scores} bands={scores?.bands} />;
+      return (
+        <div className="feedback-message loading-state">
+          <h3>You have completed the assessment.</h3>
+          <p>Thank you for your participation.</p>
+        </div>
+      );
     }
 
     return (

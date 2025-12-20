@@ -1603,6 +1603,26 @@ button {
   color: #374151;
 }
 
+.feedback-message {
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feedback-message h3 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--dark);
+}
+
+.feedback-message p {
+  margin: 0;
+  color: #475569;
+  font-weight: 600;
+}
+
 .inline-timer {
   margin-left: auto;
 }
