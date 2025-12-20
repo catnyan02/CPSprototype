@@ -22,24 +22,24 @@
     "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
     "mcq": {
       "item5": {
-        "question": "Which single slider most effectively lowers Stress quickly?",
+        "question": "You are planning your next study week. Your goal is to increase Course Performance while keeping Stress as low as possible. You may adjust the three sliders once (all changes happen at the same time). For this question, interpret the size of a change as: small = +1 slider point, moderate = +2, large = +3 (within the 0-5 slider limits). \n\n Question: Which input adjustment is the best choice for improving Course Performance with the least increase in Stress?",
         "options": [
-          "A. Increase Study Hours",
-          "B. Increase Group Work",
-          "C. Increase Rest",
-          "D. Decrease Rest"
-        ],
-        "correct": "C"
-      },
-      "item6": {
-        "question": "Which input directly drives up Project Progress when you need more progress?",
-        "options": [
-          "A. Study Hours",
-          "B. Group Work",
-          "C. Rest",
-          "D. None of them affect Project Progress"
+          "A. Increase Study Hours by a large amount and keep Rest and Group Work unchanged.",
+          "B. Increase Study Hours by a small amount and increase Rest by a small amount.",
+          "C. Increase Group Work by a moderate amount and keep Study Hours and Rest unchanged.",
+          "D. Increase Study Hours by a large amount and decrease Rest by a moderate amount."
         ],
         "correct": "B"
+      },
+      "item6": {
+        "question": "You are at the final decision step. You have one last slider adjustment available (changes occur simultaneously). Based on the causal model you identified earlier, choose the option that produces an additional +6 points in Project Progress while ensuring Stress does not rise above its current level (no Stress overshoot and no Progress undershoot). \n\n Question: Which final slider adjustment should you apply?",
+        "options": [
+          "A. Increase Study Hours by 2 points and increase Group Work by 2 points; keep Rest unchanged.",
+          "B. Increase Rest by 3 points; keep Study Hours and Group Work unchanged.",
+          "C. Increase Group Work by 3 points and increase Rest by 3 points; keep Study Hours unchanged.",
+          "D. Increase Study Hours by 3 points and increase Rest by 2 points; keep Group Work unchanged."
+        ],
+        "correct": "C"
       }
     }
   },
@@ -66,22 +66,22 @@
     "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
     "mcq": {
       "item5": {
-        "question": "Which slider directly boosts Presentation Quality the most?",
+        "question": "You are preparing for an important presentation. Your goal is to increase Presentation Quality while keeping Stress as low as possible. You may adjust the three sliders once (all changes happen at the same time). For this question, interpret the size of a change as: small = +1 slider point, moderate = +2, large = +3 (within the 0-5 slider limits). \n\n Question: Which input adjustment is the best choice for improving Presentation Quality with the least increase in Stress?",
         "options": [
-          "A. Rehearsal Time",
-          "B. Slide Polish Effort",
-          "C. Sleep / Breaks",
-          "D. None of them"
+          "A. Increase Slide Polish Effort by a large amount and keep Rehearsal Time and Sleep/Breaks unchanged.",
+          "B. Increase Rehearsal Time by a moderate amount and keep Slide Polish Effort and Sleep/Breaks unchanged.",
+          "C. Increase Slide Polish Effort by a small amount and increase Sleep/Breaks by a small amount.",
+          "D. Increase Slide Polish Effort by a large amount and decrease Sleep/Breaks by a moderate amount."
         ],
-        "correct": "B"
+        "correct": "C"
       },
       "item6": {
-        "question": "Stress is too high. What adjustment best brings Stress down with minimal hit to Confidence?",
+        "question": "You are at the final preparation step and have one last adjustment available (changes occur simultaneously). Using the causal model you discovered, choose the option that yields an additional +6 points in Presentation Quality while ensuring Stress stays at or below its current level (no Stress overshoot and no Quality undershoot). \n\nQuestion: Which final slider adjustment should you apply?",
         "options": [
-          "A. Increase Rehearsal Time",
-          "B. Increase Slide Polish Effort",
-          "C. Increase Sleep / Breaks",
-          "D. Decrease Sleep / Breaks"
+          "A. Increase Rehearsal Time by 2 points and increase Slide Polish Effort by 2 points; keep Sleep/Breaks unchanged.",
+          "B. Increase Sleep/Breaks by 3 points; keep Rehearsal Time and Slide Polish Effort unchanged.",
+          "C. Increase Slide Polish Effort by 2 points and increase Sleep/Breaks by 1 point; keep Rehearsal Time unchanged.",
+          "D. Increase Slide Polish Effort by 3 points and increase Sleep/Breaks by 1 point; keep Rehearsal Time unchanged."
         ],
         "correct": "C"
       }
@@ -110,24 +110,24 @@
     "phaseDurations": { "exploreMs": 180000, "controlMs": 180000 },
     "mcq": {
       "item5": {
-        "question": "Which input grows Earnings fastest per point of adjustment?",
+        "question": "You are scheduling your week to balance tutoring with exam preparation. Your goal is to increase Earnings while minimizing any negative impact on Exam Readiness. You may adjust the three sliders once (all changes happen at the same time). For this question, interpret the size of a change as: small = +1 slider point, moderate = +2, large = +3 (within the 0-5 slider limits). \n\n Question: Which input adjustment is the best choice for increasing Earnings while protecting Exam Readiness?",
         "options": [
-          "A. Increase Tutoring Sessions",
-          "B. Increase Session Prep Time",
-          "C. Increase Personal Study Time",
-          "D. Decrease Tutoring Sessions"
+          "A. Increase Session Prep Time by a small amount and increase Personal Study Time by a small amount.",
+          "B. Increase Number of Tutoring Sessions by a large amount and keep Session Prep Time and Personal Study Time unchanged.",
+          "C. Increase Number of Tutoring Sessions by a moderate amount and keep Session Prep Time and Personal Study Time unchanged.",
+          "D. Increase Number of Tutoring Sessions by a large amount and decrease Personal Study Time by a moderate amount."
         ],
         "correct": "A"
       },
       "item6": {
-        "question": "Exam Readiness is falling behind while Earnings look fine. What should you raise first?",
+        "question": "You are at the final decision step and have one last slider adjustment available (changes occur simultaneously). Based on the causal model you identified earlier, choose the option that produces an additional +6 points in Earnings while ensuring Exam Readiness does not drop below its current level (no overshoot downward in Readiness and no undershoot in Earnings). \n\n Question: Which final slider adjustment should you apply?",
         "options": [
-          "A. Increase Tutoring Sessions further",
-          "B. Increase Session Prep Time",
-          "C. Increase Personal Study Time",
-          "D. Reduce Session Prep Time"
+          "A. Increase Number of Tutoring Sessions by 2 points; keep Session Prep Time and Personal Study Time unchanged.",
+          "B. Increase Personal Study Time by 2 points; keep Number of Tutoring Sessions and Session Prep Time unchanged.",
+          "C. Increase Number of Tutoring Sessions by 1 point and decrease Session Prep Time by 1 point; keep Personal Study Time unchanged.",
+          "D. Increase Session Prep Time by 3 points; keep Number of Tutoring Sessions and Personal Study Time unchanged."
         ],
-        "correct": "C"
+        "correct": "D"
       }
     }
   }

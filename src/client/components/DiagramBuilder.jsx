@@ -8,7 +8,15 @@ const DEFAULT_POLARITY = 1;
 const DEFAULT_MAGNITUDE = 2;
 const ARROW_TIP_OFFSET = 24; // shortens line so arrowhead sits flush on the output edge
 
-const DiagramBuilder = ({ inputs, outputs, initialArrows = null, onSave, requestConfirm }) => {
+const DiagramBuilder = ({
+  inputs,
+  outputs,
+  initialArrows = null,
+  onSave,
+  requestConfirm,
+  showHelpButton = false,
+  onHelpClick
+}) => {
   const canvasRef = useRef(null);
   const inputRefs = useRef({});
   const outputRefs = useRef({});
@@ -352,7 +360,20 @@ const DiagramBuilder = ({ inputs, outputs, initialArrows = null, onSave, request
     <div className="diagram-builder">
       <div className="diagram-header">
         <div>
-          <h3>Causal Diagram</h3>
+          <div className="diagram-title-row">
+            <h3>Causal Diagram</h3>
+            {showHelpButton && (
+              <button
+                type="button"
+                className="help-btn"
+                title="View Instructions"
+                onClick={onHelpClick}
+                aria-label="View instructions"
+              >
+                ?
+              </button>
+            )}
+          </div>
           <div className="header-hints subdued">
             <span>Click an input then an output to connect. Select a line to edit polarity/strength.</span>
             <span>Undo/redo: Ctrl+Z / Ctrl+Shift+Z (or use the buttons).</span>
