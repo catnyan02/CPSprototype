@@ -9,12 +9,15 @@
   --dark: #0f172a;
   --panel: #ffffff;
   --panel-soft: #f2f4f7;
+  --start-panel-height: 595px;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
+  height: 100vh;
+  overflow: hidden;
   background: #f8fafc;
   color: #333;
 }
@@ -105,19 +108,19 @@ body {
   box-shadow: 0 28px 70px rgba(15, 23, 42, 0.16);
   max-width: none;
   width: 100%;
-  padding: 24px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   border: 1px solid #e5e7eb;
 }
 
 .start-card.start-grid {
   display: grid;
   grid-template-columns: minmax(320px, 1fr) minmax(380px, 1fr);
-  gap: 24px;
+  gap: 18px;
   align-items: stretch;
-  max-height: calc(100vh - 64px);
+  max-height: none;
 }
 
 .start-header {
@@ -147,14 +150,17 @@ body {
 }
 
 .start-hero {
+  height: var(--start-panel-height);
   background: linear-gradient(145deg, #e0e7ff 0%, #f8fafc 100%);
   border-radius: 18px;
-  padding: 18px;
+  padding: 14px;
   border: 1px solid #e2e8f0;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 18px 40px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .start-hero-note {
@@ -307,22 +313,24 @@ body {
 }
 
 .practice-module {
+  height: var(--start-panel-height);
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
-  padding: 10px 12px 10px;
+  padding: 8px 10px 8px;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  gap: 10px;
-  height: 100%;
+  gap: 8px;
   align-items: stretch;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .practice-note {
   background: #f8fafc;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 8px 10px;
   font-size: 14px;
   color: #111827;
   line-height: 1.45;
@@ -334,7 +342,7 @@ body {
 }
 
 .practice-note ul {
-  margin: 0 0 6px 16px;
+  margin: 0 0 4px 16px;
   padding: 0;
   color: #374151;
 }
@@ -360,7 +368,7 @@ body {
 .practice-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: 12px;
+  gap: 10px;
   align-items: center;
   align-content: center;
   justify-content: center;
@@ -377,7 +385,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .practice-label {
@@ -407,7 +415,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .practice-bar {
@@ -418,7 +426,7 @@ body {
 .practice-actions {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, auto));
-  gap: 12px;
+  gap: 10px;
   align-items: center;
   margin-top: 0;
   justify-content: center;
@@ -447,7 +455,7 @@ body {
 .start-primary-action {
   margin-top: 10px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .intro-actions.dual {
@@ -478,6 +486,11 @@ body {
 @media (max-width: 1024px) {
   .start-card.start-grid {
     grid-template-columns: 1fr;
+  }
+
+  .start-hero,
+  .practice-module {
+    height: auto;
   }
 }
 

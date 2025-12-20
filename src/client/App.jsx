@@ -87,12 +87,16 @@ const App = () => {
   };
 
   const applyPractice = () => {
-    const next = PRACTICE_WEIGHTS.map((weights) => {
+    const deltas = PRACTICE_WEIGHTS.map((weights) => {
       const weighted = weights.reduce((acc, w, idx) => acc + w * practiceInputs[idx], 0);
-      const scaled = weighted * PRACTICE_SCALE; // map to 0-100 range
-      return clamp(Math.round(scaled), PRACTICE_MIN, PRACTICE_MAX);
+      return weighted * PRACTICE_SCALE;
     });
-    setPracticeOutputs(next);
+
+    setPracticeOutputs((current) =>
+      deltas.map((delta, idx) =>
+        clamp(Math.round(current[idx] + delta), PRACTICE_MIN, PRACTICE_MAX)
+      )
+    );
   };
 
   const startSession = async () => {
@@ -587,6 +591,10 @@ const App = () => {
                   <p>Use your understanding to reach specific goals.</p>
                 </div>
               </div>
+
+              <div className="start-primary-action">
+                <button className="start-btn" onClick={startSession}>Begin Assessment</button>
+              </div>
             </div>
 
             <div className="practice-module elevated">
@@ -647,10 +655,6 @@ const App = () => {
                 <button className="apply-btn" onClick={applyPractice}>Apply</button>
                 <button className="reset-btn" onClick={resetPractice}>Reset</button>
               </div>
-            </div>
-
-            <div className="start-primary-action">
-              <button className="start-btn" onClick={startSession}>Begin Assessment</button>
             </div>
           </div>
         </div>
