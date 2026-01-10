@@ -7,6 +7,7 @@ const eventRoutes = require('./routes/event');
 const diagramRoutes = require('./routes/diagram');
 const controlRoutes = require('./routes/control');
 const scoreRoutes = require('./routes/score');
+const sessionExportRoutes = require('./routes/sessionExport');
 const adminRoutes = require('./routes/admin');
 const healthRoutes = require('./routes/health');
 
@@ -24,6 +25,7 @@ app.use('/api/event', eventRoutes);
 app.use('/api/diagram', diagramRoutes);
 app.use('/api/control-final', controlRoutes);
 app.use('/api/score', scoreRoutes);
+app.use('/api/session-export', sessionExportRoutes);
 app.use('/admin', adminRoutes);
 app.use('/health', healthRoutes);
 

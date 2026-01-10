@@ -26,8 +26,9 @@ router.post('/', (req, res) => {
     // Compute scores
     const results = computeAggregateScores(session, microworldsConfig);
 
-    // Persist scores
-    updateSession(sessionId, { scores: results });
+    // Persist scores without bands in session file
+    const { bands, ...scoresToStore } = results;
+    updateSession(sessionId, { scores: scoresToStore });
 
     res.json(results);
   } catch (err) {
@@ -37,6 +38,10 @@ router.post('/', (req, res) => {
 });
 
 module.exports = router;
+
+
+
+
 
 
 

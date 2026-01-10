@@ -48,6 +48,8 @@ const App = () => {
   const [outputs, setOutputs] = useState([]); // Array of values
   const [controlSteps, setControlSteps] = useState(0);
   const [scores, setScores] = useState(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
   const [practiceInputs, setPracticeInputs] = useState([0, 0, 0]);
   const [practiceOutputs, setPracticeOutputs] = useState([0, 0]);
@@ -389,6 +391,34 @@ const App = () => {
     }
   };
 
+  const downloadSessionData = async () => {
+    if (!session || isDownloading) return;
+    setIsDownloading(true);
+    setDownloadError(null);
+
+    try {
+      const res = await fetch(`/api/session-export?sessionId=${session.sessionId}`);
+      if (!res.ok) {
+        throw new Error('Failed to fetch session export');
+      }
+      const data = await res.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `cps-session-${session.sessionId}.json`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to download session data', err);
+      setDownloadError('Download failed. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const handleSessionTimeout = async () => {
     if (sessionExpired || phase === PHASE.FEEDBACK) return;
     setSessionExpired(true);
@@ -697,6 +727,14 @@ const App = () => {
         <div className="feedback-message loading-state">
           <h3>You have completed the assessment.</h3>
           <p>Thank you for your participation.</p>
+          <button
+            className="apply-btn"
+            onClick={downloadSessionData}
+            disabled={isDownloading || !session}
+          >
+            {isDownloading ? 'Preparing download...' : 'Download logs and scores'}
+          </button>
+          {downloadError && <p className="error-text">{downloadError}</p>}
         </div>
       );
     }
@@ -856,3 +894,7 @@ const App = () => {
 };
 
 export default App;
+
+
+
+

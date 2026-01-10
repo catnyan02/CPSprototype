@@ -135,30 +135,37 @@ function scoreSU(logs, config) {
   const trials = logs.filter(l => l.type === 'CLICK_APPLY' && l.phase === 'explore')
     .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-  // Determine initial inputs
-  let currentInputs = config.inputs.map(i => i.initial);
+  // Determine baseline and previous inputs
+  const baselineInputs = config.inputs.map(i => i.initial);
+  let currentInputs = baselineInputs.slice();
   
   const validTrials = []; // { changedIndex: number | null } (null if multiple or zero)
 
   trials.forEach(trial => {
     const trialInputs = trial.payload.inputs; // Expect array matching input order
-    let changes = 0;
-    let changedIdx = -1;
+    const activeIndices = [];
+    const changedIndices = [];
     
     if (!trialInputs) return;
 
     for (let i = 0; i < trialInputs.length; i++) {
+      if (trialInputs[i] !== baselineInputs[i]) {
+        activeIndices.push(i);
+      }
       if (trialInputs[i] !== currentInputs[i]) {
-        changes++;
-        changedIdx = i;
+        changedIndices.push(i);
       }
     }
 
-    if (changes === 1) {
-      validTrials.push({ changedIndex: changedIdx });
-    } else {
-      validTrials.push({ changedIndex: null }); // Invalid VOTAT
+    let changedIdx = null;
+    // Valid VOTAT if exactly one input is active (baseline comparison),
+    // or exactly one input changed while at least one input is active.
+    if (activeIndices.length === 1) {
+      changedIdx = activeIndices[0];
+    } else if (activeIndices.length > 0 && changedIndices.length === 1) {
+      changedIdx = changedIndices[0];
     }
+    validTrials.push({ changedIndex: changedIdx });
     
     currentInputs = trialInputs;
   });
